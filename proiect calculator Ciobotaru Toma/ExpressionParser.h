@@ -32,6 +32,7 @@ public:
     friend istream& operator>>(istream& in, ExpressionParser& parser);
     const char& operator[](int index) const;
     explicit operator string() const;
+    static bool esteNumarValid(const string& numar);
 };
 
 #endif // EXPRESSIONPARSER_H

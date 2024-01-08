@@ -17,6 +17,23 @@ ExpressionParser::ExpressionParser(const ExpressionParser& other) : expresie(new
     strncpy(expresie, other.expresie, maxLungime);
 }
 
+
+bool ExpressionParser::esteNumarValid(const string& numar) {
+    int countPuncte = 0;
+    for (char c : numar) {
+        if (c == '.') {
+            countPuncte++;
+            if (countPuncte > 1) {
+                return false; 
+            }
+        } else if (!isdigit(c)) {
+            return false; 
+        }
+    }
+    return true; 
+}
+
+
 ExpressionParser& ExpressionParser::operator=(const ExpressionParser& other) {
     if (this != &other) {
         delete[] expresie;
@@ -67,35 +84,54 @@ string ExpressionParser::convertToPostfix() {
     char stack[maxLungime];
     int top = -1;
     string postfix;
+    string numarCurent;
+
     for (int i = 0; i < strlen(expresie); ++i) {
         char c = expresie[i];
-        if (esteCaracter(c) || (c == '.' && i > 0 && isdigit(expresie[i-1]) && isdigit(expresie[i+1]))) {
-            postfix += c;
-            
-            if (i + 1 == strlen(expresie) || (!esteCaracter(expresie[i + 1]) && expresie[i + 1] != '.')) {
-                postfix += ' '; 
+        if (esteCaracter(c) || (c == '.' && i > 0 && isdigit(expresie[i-1]))) {
+            numarCurent += c;
+        } else {
+            if (!numarCurent.empty()) {
+                if (!esteNumarValid(numarCurent)) {
+                    throw std::runtime_error("Numar invalid: " + numarCurent);
+                }
+                postfix += numarCurent + ' ';
+                numarCurent.clear();
             }
-        } else if (c == '(' || c == '[') {
-            stack[++top] = c;
-        } else if (c == ')' || c == ']') {
-            char coresp = (c == ')') ? '(' : '[';
-            while (top != -1 && stack[top] != coresp) {
-                postfix += stack[top--];
-                postfix += ' ';
+
+            if (c == '(' || c == '[') {
+                stack[++top] = c;
+            } else if (c == ')' || c == ']') {
+                char coresp = (c == ')') ? '(' : '[';
+                while (top != -1 && stack[top] != coresp) {
+                    postfix += stack[top--];
+                    postfix += ' ';
+                }
+                top--; 
+            } else if (esteOperator(c)) {
+                while (top != -1 && prioritate(stack[top]) >= prioritate(c)) {
+                    postfix += stack[top--];
+                    postfix += ' ';
+                }
+                stack[++top] = c; 
             }
-            top--; 
-        } else if (esteOperator(c)) {
-            while (top != -1 && prioritate(stack[top]) >= prioritate(c)) {
-                postfix += stack[top--];
-                postfix += ' ';
-            }
-            stack[++top] = c; 
         }
     }
+
+    
+    if (!numarCurent.empty()) {
+        if (!esteNumarValid(numarCurent)) {
+            throw std::runtime_error("Numar invalid: " + numarCurent);
+        }
+        postfix += numarCurent + ' ';
+    }
+
+   
     while (top != -1) {
         postfix += stack[top--];
         postfix += ' ';
     }
+
     return postfix;
 }
 

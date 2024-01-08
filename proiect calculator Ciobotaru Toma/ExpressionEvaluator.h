@@ -10,9 +10,9 @@ using namespace std;
 
 class ExpressionEvaluator {
 private:
-    static const int maxDimensiune = 1000; // Dimensiunea maximă pentru stack
-    double stack[maxDimensiune]; // Stack implementat ca un array
-    int top; // Index pentru vârful stack-ului
+    static const int maxDimensiune = 1000; 
+    double stack[maxDimensiune]; 
+    int top; 
     string expresiePostfixata;
 
     double aplicaOperator(double a, double b, char op);

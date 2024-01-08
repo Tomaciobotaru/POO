@@ -65,7 +65,7 @@ double ExpressionEvaluator::aplicaOperator(double a, double b, char op) {
         case '/': 
             if (b == 0) {
                 cerr << "Impartire la zero!" << endl;
-                std::numeric_limits<double>::quiet_NaN(); 
+            return  std::numeric_limits<double>::quiet_NaN(); 
             }
             return a / b;
         case '^': 
@@ -74,17 +74,18 @@ double ExpressionEvaluator::aplicaOperator(double a, double b, char op) {
             return calculeazaRadical(a, b); 
         default: 
             cerr << "Operator necunoscut: " << op << endl;
-            std::numeric_limits<double>::quiet_NaN();
+          return  std::numeric_limits<double>::quiet_NaN();
     }
 }
 
 double ExpressionEvaluator::calculeazaRadical(double x, double y) {
-    if (y < 0 || (x == 0 && y == 0)) {
+    if (x < 0 || (y <= 0)) {  // Schimbat condițiile pentru a verifica x < 0 și y <= 0
         cerr << "Parametri invalizi pentru radical." << endl;
-        std::numeric_limits<double>::quiet_NaN();
+        return std::numeric_limits<double>::quiet_NaN();
     }
-    return pow(y, 1.0 / x);
+    return pow(x, 1.0 / y);  // Schimbat pentru a calcula x la puterea 1/y
 }
+
 
 
 const string& ExpressionEvaluator::getExpresiePostfixata() const {
