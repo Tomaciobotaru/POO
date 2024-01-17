@@ -1,0 +1,46 @@
+#include <iostream>
+using namespace std;
+
+class A {
+	string attrA;
+public:
+	A() {
+
+	}
+	A(string e) {
+		attrA = e;
+	}
+	virtual string show() {
+		cout<< "eu sunt membru de tip A"<<endl;
+		return "0";
+	}
+};
+
+class B :public A {
+	string attrB;
+public:
+	B() :A() {
+
+	}
+	B(string e, string b) :A(e) {
+		attrB = b;
+	}
+	
+	string show() override {
+		cout<< "eu sunt membru de tip B"<<endl;
+		return "0";
+	}
+};
+
+int main() {
+	A** all = new A*[3];
+	A* a=new A("hei A");
+	A* a1=new A("hei A");
+	B* b= new B("Hei A","hei B");
+	all[0] = a;
+	all[1] = a1;
+	all[2] = b;
+	all[0]->show();
+	all[1]->show();
+	all[2]->show();
+}
